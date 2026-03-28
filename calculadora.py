@@ -15,6 +15,49 @@ expresion = ""
 #Variable para almacenar el estado del visor
 resultados_mostrado = False
 
+#Funcion para actualizar la expresion en el cuadro de texto
+def pulsar_tecla(tecla):
+    global expresion, resultados_mostrado
+     #Evaluar si ya se ha calculado y mostrado un resultado
+    if resultados_mostrado:
+        #Evaluar si se presiono un int o ".", reiniciar el visor
+        if tecla.isdigit() or tecla == ".":
+            expresion = str(tecla)
+        else:
+            expresion += str(tecla)
+        resultados_mostrado = False
+    else: 
+        expresion += str(tecla)            
+    visor_texto.set(expresion)
+
+#Funcion para limpiar la entrada
+
+def limpiar():
+    global expresion, resultados_mostrado
+
+    expresion = ""
+    visor_texto.set(expresion)
+    resultados_mostrado = False    
+
+#Funcion para evaluar la expresion y mostrar el resultado
+
+def evaluar():
+    global expresion, resultados_mostrado
+
+    try:
+        resultado = eval(expresion)
+        #Verificar si el resultado es un numero entero
+        if resultado == int(resultado):
+            resultado = int(resultado)
+        visor_texto.set(str(resultado))
+        expresion = str(resultado)
+        resultados_mostrado = True
+    except:
+        visor_texto.set("Error")
+        expresion = ""
+        resultados_mostrado = False        
+
+
 
 #Configurar el tamaño dinamico de las columnas y filas
 for i in range(5):
@@ -46,15 +89,16 @@ botones = [
 
 #Crear y posicionar los botones ("Excepto "="")
 for(texto, fila, columna) in botones: 
-    if texto == 'C':
-        pass
+    if texto == 'c':
+        comando = limpiar
     else: 
         comando = lambda x=texto: pulsar_tecla(x) 
     tk.Button(ventana,
               text=texto,
               padx=20,
               pady=20,
-              font=('Helvetica', 20)
+              font=('Helvetica', 20),
+              command=comando
               ).grid(row=fila,
                             column=columna,
                             sticky='nsew') 
@@ -63,7 +107,8 @@ tk.Button(ventana,
               text="=",
               padx=20,
               pady=20,
-              font=('Helvetica', 40)
+              font=('Helvetica', 40),
+              command=evaluar
               ).grid(row=5,
                     column=0,
                     columnspan=4,
