@@ -6,8 +6,8 @@ ventana = tk.Tk()
 ventana.title("Mi Calculadora")
 
 #Cambiar icono de la app
-#ruta_icono = "C:\Users\user\Pictures"
-ventana.iconbitmap("calculadora.ico")
+ruta_icono = "C:/proyecto/calculadora/calculadora.ico"
+ventana.iconbitmap(ruta_icono)
 
 #Una variable para almacenar la expresion matematica
 expresion = ""
