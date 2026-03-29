@@ -69,15 +69,21 @@ for i in range(4):
 visor_texto = tk.StringVar()
 visor = tk.Entry(ventana,
                  textvariable=visor_texto,
-                 font=('Helvetica', 24),
+                 font=('Helvetica', 35, 'bold'),
                  bd=10,
                  insertwidth=4,
                  width=14,
-                 borderwidth=4,
-                 justify='right')
+                 borderwidth=2,
+                 justify='right',
+                 relief="sunken",
+                 bg="#e8f0fe",
+                 fg="#333333")
 visor.grid(row=0,
            column=0,
-           columnspan=4)
+           columnspan=4,
+           sticky="ew",
+           padx=10,
+           pady=10)
 
 #Botones de calculadora
 botones = [
@@ -87,31 +93,83 @@ botones = [
     ('0', 4, 0), ('.', 4, 1), ('c', 4, 2), ('+', 4, 3),
 ]
 
+# Colores almacenados en variables
+
+color_fondo = "#0B0F1A"              # negro azulado profundo
+color_fondo_secundario = "#1A1F38"  # panel elegante
+
+color_botones_numeros = "#F9C80E"   # 🟡 amarillo vibrante (protagonista)
+color_botones_operadores = "#FF006E" # 🌈 rosado neón
+color_boton_igual = "#00F5D4"       # 💎 verde aqua brillante
+color_boton_borrar = "#FF2E63"      # 🔴 rojo intenso moderno
+
+color_texto_principal = "#0B0F1A"   # negro para contraste en botones claros
+color_texto_secundario = "#FFFFFF"  # blanco limpio
+
+color_hover = "#8338EC"             # 🟣 morado eléctrico (hover)
+color_bordes = "#3A86FF"            # 🔵 azul eléctrico
+
+
 #Crear y posicionar los botones ("Excepto "="")
-for(texto, fila, columna) in botones: 
-    if texto == 'c':
+for (texto, fila, columna) in botones: 
+    if texto in ['/', '*', '-', '+']:
+        comando = lambda x=texto: pulsar_tecla(x)
+        bg_color = color_botones_operadores
+        fg_color = color_texto_secundario
+
+    elif texto == 'c':
         comando = limpiar
+        bg_color = color_boton_borrar
+        fg_color = color_texto_secundario
+
+    elif texto == '=':
+        comando = lambda x=texto: pulsar_tecla(x)
+        bg_color = color_boton_igual
+        fg_color = color_texto_principal
+
     else: 
-        comando = lambda x=texto: pulsar_tecla(x) 
-    tk.Button(ventana,
-              text=texto,
-              padx=20,
-              pady=20,
-              font=('Helvetica', 20),
-              command=comando
-              ).grid(row=fila,
-                            column=columna,
-                            sticky='nsew') 
+        comando = lambda x=texto: pulsar_tecla(x)
+        bg_color = color_botones_numeros   # 🟡 Amarillo para números
+        fg_color = color_texto_principal   # Negro para que resalte
+
+    tk.Button(
+        ventana,
+        text=texto,
+        padx=20,
+        pady=20,
+        font=('Helvetica', 20, 'bold'),
+        command=comando,
+        bd=2,
+        relief="raised",
+        bg=bg_color,
+        fg=fg_color,
+        activebackground=color_hover,
+        activeforeground="#FFFFFF"
+    ).grid(
+        row=fila,
+        column=columna,
+        sticky='nsew',
+        padx=3,
+        pady=3
+    )
 # Boton de igual "=" que ocupa toda la ultima fila
 tk.Button(ventana,
               text="=",
               padx=20,
               pady=20,
-              font=('Helvetica', 40),
-              command=evaluar
+              font=('Helvetica', 40, 'bold'),
+              command=evaluar,
+              bd=1,
+              relief="raised",
+              bg= color_boton_igual,
+              fg=color_fondo_secundario,
+              activeforeground=color_hover,
+              activebackground=color_texto_principal
               ).grid(row=5,
                     column=0,
                     columnspan=4,
-                    sticky='nsew') 
+                    sticky='ew',
+                    padx=3,
+                    pady=3) 
 # Ejecutar la aplicación
 ventana.mainloop()
